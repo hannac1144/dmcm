@@ -34,10 +34,6 @@ function otherFlowPlugin() {
       );
 
       out = out.replace(
-        "  addHeading('Assessment answers');\n  pathways[pathway].questions.forEach(question => {",
-        "  addHeading('Assessment answers');\n  pathways[pathway].questions.forEach(question => {"
-      );
-      out = out.replace(
         "  });\n\n  ['funding','license','terms'].forEach(type => {",
         "  });\n  getOtherEntries(answers).forEach(([questionId, detail]) => {\n    const question = pathways[pathway].questions.find(q => q.id === questionId);\n    if (question) addText(`${question.title} — Other description: ${detail}`, 10, false, 4);\n  });\n\n  ['funding','license','terms'].forEach(type => {",
         1
@@ -47,6 +43,11 @@ function otherFlowPlugin() {
       const newQuestion = `{current.id === 'state' ? <select className=\"state-select\" value={answers.state || ''} onChange={e => e.target.value && choose(e.target.value)}><option value=\"\">Select a state…</option>{states.map(state => <option key={state} value={state}>{state}</option>)}</select> : <><div className=\"choices\">{current.options.map(([label, value]) => <button className=\"choice\" key={value} onClick={() => choose(value)}><span>{label}</span><b>→</b></button>)}</div>{OTHER_VALUES.has(answers[current.id]) && <div className=\"other-answer-field\"><label className=\"other-answer-label\">{getOtherLabel().label}<input className=\"other-answer-input\" value={otherDraft} onChange={e => saveOtherDraft(e.target.value)} placeholder={getOtherLabel().placeholder} autoFocus /></label><button className=\"primary\" disabled={!otherDraft.trim()} onClick={continueOther}>{getOtherLabel().continue}</button></div>}</>}<button className=\"text-button\" onClick={backQuestion}>← Back</button>`;
       if (!out.includes(oldQuestion)) throw new Error('Expected questionnaire markup was not found');
       out = out.replace(oldQuestion, newQuestion);
+
+      out = out.replace(
+        "<div className=\"decision-header\"><span className=\"eyebrow\">{data.eyebrow}</span><h1>{data.title}</h1><p>{data.intro}</p></div>",
+        "<div className=\"decision-header\"><span className=\"eyebrow\">{data.eyebrow}</span><h1>{data.title}</h1><p>{data.intro}</p>{getOtherEntries(answers).length > 0 && <div className=\"consider\"><strong>{getOtherLabel().summary}:</strong> {getOtherEntries(answers).map(([questionId, detail]) => `${pathways[pathway]?.questions.find(q => q.id === questionId)?.title}: ${detail}`).join(' · ')}</div>}</div>"
+      );
 
       out = out.replace(
         "<div className=\"state-summary\"><span className=\"eyebrow\">State-law issue spotting</span>",
