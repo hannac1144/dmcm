@@ -12,6 +12,11 @@
       html[dir="rtl"] body { text-align:right; }
       html[dir="rtl"] .nav-row, html[dir="rtl"] footer, html[dir="rtl"] header { direction:rtl; }
       html[dir="rtl"] .columns, html[dir="rtl"] .summary-grid, html[dir="rtl"] .howto-grid, html[dir="rtl"] .funding-list { direction:rtl; }
+      .other-answer-field { margin-top: 10px; }
+      .other-answer-label { display:block; font-size:13px; font-weight:600; color:#536159; }
+      .other-answer-input { display:block; width:100%; box-sizing:border-box; margin-top:6px; padding:11px 12px; border:1px solid #cfd8d2; border-radius:10px; background:#fff; color:#183d30; font:inherit; outline:none; }
+      .other-answer-input:focus { border-color:#183d30; box-shadow:0 0 0 3px rgba(24,61,48,.10); }
+      html[dir="rtl"] .other-answer-label { text-align:right; }
       @media(max-width:760px){ .language-control { top:10px; right:10px; } html[dir="rtl"] .language-control { left:10px; right:auto; } }
     </style>
   </head>
@@ -22,5 +27,6 @@
     <script type="module" src="/src/language-reload.js"></script>
     <script type="module" src="/src/site-i18n.js"></script>
     <script type="module" src="/src/site-i18n-extra.js"></script>
+    <script type="module" src="/src/other-inputs.js"></script>
   </body>
 </html>
