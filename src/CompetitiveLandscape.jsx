@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const clean = value => String(value || '').trim();
 const quote = value => `\"${clean(value).replace(/\"/g, '')}\"`;
 const unique = values => [...new Set(values.filter(Boolean))];
+const first = value => Array.isArray(value) ? clean(value[0]) : clean(value);
 
 async function getJSON(url) {
   const response = await fetch(url);
@@ -43,36 +44,62 @@ async function searchDevices(term) {
   return unique(items.map(x => JSON.stringify(x))).map(x => JSON.parse(x)).slice(0, 15);
 }
 
+function drugNameFromLabel(r) {
+  const brand = first(r.openfda?.brand_name);
+  const generic = first(r.openfda?.generic_name);
+  const substance = first(r.openfda?.substance_name);
+  const proprietary = first(r.openfda?.brand_name_suffix);
+  const fallback = first(r.active_ingredient) || first(r.description);
+  if (brand && generic && brand.toLowerCase() !== generic.toLowerCase()) return `${brand} (${generic})`;
+  return brand || generic || substance || proprietary || fallback || '';
+}
+
 async function searchDrugs(term) {
   const q = quote(term);
   const endpoints = [
-    `https://api.fda.gov/drug/drugsfda.json?search=${encodeURIComponent(`openfda.brand_name:${q} OR openfda.generic_name:${q} OR products.active_ingredients.name:${q}`)}&limit=12`,
-    `https://api.fda.gov/drug/label.json?search=${encodeURIComponent(`indications_and_usage:${q}`)}&limit=12`
+    `https://api.fda.gov/drug/drugsfda.json?search=${encodeURIComponent(`openfda.brand_name:${q} OR openfda.generic_name:${q} OR products.active_ingredients.name:${q}`)}&limit=15`,
+    `https://api.fda.gov/drug/label.json?search=${encodeURIComponent(`openfda.brand_name:${q} OR openfda.generic_name:${q} OR openfda.substance_name:${q} OR indications_and_usage:${q}`)}&limit=20`
   ];
   const settled = await Promise.allSettled(endpoints.map(getJSON));
   const items = [];
   const approved = settled[0].status === 'fulfilled' ? settled[0].value.results || [] : [];
   approved.forEach(r => {
-    const product = r.products?.[0] || {};
-    items.push({
-      name: product.brand_name || r.openfda?.brand_name?.[0] || product.active_ingredients?.[0]?.name || r.openfda?.generic_name?.[0] || 'FDA drug product',
-      company: r.sponsor_name || r.openfda?.manufacturer_name?.[0] || 'Sponsor not listed',
-      status: product.marketing_status || 'Drugs@FDA record',
-      detail: [r.application_number, product.dosage_form, product.route].filter(Boolean).join(' · '),
-      source: 'Drugs@FDA',
-      key: `${r.application_number}-${product.product_number || product.brand_name || ''}`
+    const products = r.products?.length ? r.products : [{}];
+    products.slice(0, 4).forEach(product => {
+      const brand = clean(product.brand_name) || first(r.openfda?.brand_name);
+      const generic = clean(product.active_ingredients?.[0]?.name) || first(r.openfda?.generic_name) || first(r.openfda?.substance_name);
+      const name = brand && generic && brand.toLowerCase() !== generic.toLowerCase() ? `${brand} (${generic})` : brand || generic;
+      if (!name) return;
+      items.push({
+        name,
+        company: r.sponsor_name || first(r.openfda?.manufacturer_name) || 'Sponsor not listed',
+        status: product.marketing_status || 'Drugs@FDA record',
+        detail: [r.application_number, product.dosage_form, product.route].filter(Boolean).join(' · '),
+        source: 'Drugs@FDA',
+        key: `${r.application_number}-${product.product_number || name}`
+      });
     });
   });
   const labels = settled[1].status === 'fulfilled' ? settled[1].value.results || [] : [];
-  labels.forEach(r => items.push({
-    name: r.openfda?.brand_name?.[0] || r.openfda?.generic_name?.[0] || 'Labeled drug product',
-    company: r.openfda?.manufacturer_name?.[0] || 'Manufacturer not listed',
-    status: r.openfda?.product_type?.[0] || 'FDA labeling record',
-    detail: clean(r.indications_and_usage?.[0]).replace(/\s+/g, ' ').slice(0, 240),
-    source: 'FDA drug labeling',
-    key: r.id || r.set_id || `${r.openfda?.brand_name?.[0]}-${r.openfda?.manufacturer_name?.[0]}`
-  }));
-  return unique(items.map(x => JSON.stringify(x))).map(x => JSON.parse(x)).slice(0, 15);
+  labels.forEach(r => {
+    const name = drugNameFromLabel(r);
+    if (!name) return;
+    items.push({
+      name,
+      company: first(r.openfda?.manufacturer_name) || 'Manufacturer not listed',
+      status: first(r.openfda?.product_type) || 'FDA labeling record',
+      detail: clean(r.indications_and_usage?.[0]).replace(/\s+/g, ' ').slice(0, 240),
+      source: 'FDA drug labeling',
+      key: r.id || r.set_id || `${name}-${first(r.openfda?.manufacturer_name)}`
+    });
+  });
+  const seen = new Set();
+  return items.filter(item => {
+    const normalized = `${item.name}|${item.company}`.toLowerCase();
+    if (seen.has(normalized)) return false;
+    seen.add(normalized);
+    return true;
+  }).slice(0, 18);
 }
 
 export default function CompetitiveLandscape({ pathway, answers }) {
