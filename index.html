@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="A guided decision-support tool for healthcare technology development, funding, licensing, and contracting." />
     <title>HealthTech Pathways</title>
+    <style>
+      .language-control { position: fixed; top: 16px; right: 24px; z-index: 1000; display:flex; align-items:center; gap:8px; padding:7px 10px; border:1px solid #d7ded8; border-radius:999px; background:rgba(246,247,242,.96); box-shadow:0 4px 14px rgba(24,37,31,.08); font:12px Inter,system-ui,sans-serif; color:#536159; }
+      .language-control select { border:0; background:transparent; color:#183d30; font-weight:700; cursor:pointer; outline:none; }
+      html[dir="rtl"] .language-control { right:auto; left:24px; }
+      html[dir="rtl"] body { text-align:right; }
+      html[dir="rtl"] .nav-row, html[dir="rtl"] footer, html[dir="rtl"] header { direction:rtl; }
+      html[dir="rtl"] .columns, html[dir="rtl"] .summary-grid, html[dir="rtl"] .howto-grid, html[dir="rtl"] .funding-list { direction:rtl; }
+      @media(max-width:760px){ .language-control { top:10px; right:10px; } html[dir="rtl"] .language-control { left:10px; right:auto; } }
+    </style>
+    <title>HealthTech Pathways</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/language.js"></script>
   </body>
 </html>
