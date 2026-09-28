@@ -1,3 +1,4 @@
+// Redeploy: updated market navigation wording
 import React, { useMemo, useState } from 'react';
 
 const fundingSources = [
