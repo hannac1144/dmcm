@@ -13,7 +13,7 @@ function addLegalPathwayIntro() {
   section.setAttribute('aria-labelledby', 'legal-pathway-intro-title');
   section.innerHTML = `
     <h2 id="legal-pathway-intro-title">Choosing a Legal Pathway for Health-Care Technology Development</h2>
-    <p>Health-care technology and life-sciences companies have several ways to develop, finance, license, and commercialize intellectual property. This tool helps companies compare independent development, licensing, co-development and strategic partnerships, and assignment or acquisition based on factors including intellectual-property ownership, control, funding needs, regulatory responsibilities, commercialization capabilities, deal economics, and risk allocation.</p>
+    <p>Health-care technology and life-sciences companies have several ways to develop, finance, license, and commercialize intellectual property. This tool helps companies compare independent development, licensing, co-development and strategic partnerships, and transfer of the agreement or rights or acquisition based on factors including who owns the technology, control, funding needs, regulatory responsibilities, ability to bring the product to market, deal economics, and who is responsible if something goes wrong.</p>
   `;
 
   heroCopy.insertBefore(section, pathwayChoices);
