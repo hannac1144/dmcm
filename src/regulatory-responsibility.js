@@ -42,9 +42,9 @@ function showStandalonePage(){
  let ownership='',responsibility='';
  try{ownership=sessionStorage.getItem('healthtech-ownership')||'';responsibility=sessionStorage.getItem('healthtech-regulatory-responsibility')||'';ownInput.value=sessionStorage.getItem('healthtech-ownership-other')||'';}catch{}
  function chooseOwnership(value){ownership=value;try{sessionStorage.setItem('healthtech-ownership',value)}catch{}
- page.querySelectorAll('.ownership-factor-option').forEach(b=>b.classList.toggle('selected',b.dataset.value===value));ownOther.hidden=value!=='ownership-other';ownNote.hidden=false;ownNote.textContent=ownershipNotes[value]||'';validate();}
+ page.querySelectorAll('.ownership-factor-option').forEach(b=>b.classList.toggle('selected',b.dataset.value===value));ownOther.hidden=value!=='ownership-other';ownNote.hidden=false;const note=ownershipMap[value]||["This affects who can use or share the technology.","Confirm the arrangement and any approvals needed."];ownNote.innerHTML=`<strong>Why it matters:</strong> ${note[0]}<br><strong>Consider:</strong> ${note[1]}`;validate();}
  function chooseResponsibility(value){responsibility=value;try{sessionStorage.setItem('healthtech-regulatory-responsibility',value)}catch{}
- page.querySelectorAll('.responsibility-option').forEach(b=>b.classList.toggle('selected',b.dataset.value===value));regNote.hidden=false;regNote.textContent=regulatoryNotes[value]||'';validate();}
+ page.querySelectorAll('.responsibility-option').forEach(b=>b.classList.toggle('selected',b.dataset.value===value));regNote.hidden=false;const note=regulatoryMap[value]||["This affects who manages regulatory work.","Agree on roles, costs and access to records."];regNote.innerHTML=`<strong>Why it matters:</strong> ${note[0]}<br><strong>Consider:</strong> ${note[1]}`;validate();}
  function validate(){continueBtn.disabled=!ownership||!responsibility||(ownership==='ownership-other'&&!ownInput.value.trim());}
  page.querySelectorAll('.ownership-factor-option').forEach(b=>b.addEventListener('click',()=>chooseOwnership(b.dataset.value)));
  page.querySelectorAll('.responsibility-option').forEach(b=>b.addEventListener('click',()=>chooseResponsibility(b.dataset.value)));
