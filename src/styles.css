@@ -175,3 +175,18 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 @keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @media(max-width:760px){.hero{flex-direction:column;align-items:stretch}.hero-visual{max-width:100%;width:min(100%,400px);margin:0 auto}}
 @media(prefers-reduced-motion:reduce){.hero-visual svg{animation:none}}
+
+
+/* Robot signpost for existing relevance / "why it matters" explanations */
+.why-with-robot{display:flex;align-items:center;gap:12px;margin:12px 0!important}
+.why-robot-sign{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;min-width:118px;color:#174b3a}
+.why-robot{position:relative;display:inline-flex;width:34px;height:42px;align-items:flex-end;justify-content:center;animation:why-robot-bob 2.8s ease-in-out infinite}
+.why-robot-head{position:absolute;top:2px;width:27px;height:23px;border:2px solid #347e68;border-radius:8px;background:#d9f2e5;display:flex;align-items:center;justify-content:center;gap:5px}
+.why-robot-head i{width:3px;height:4px;border-radius:50%;background:#245e4a}
+.why-robot-head b{position:absolute;bottom:4px;left:8px;width:8px;height:3px;border-bottom:1.5px solid #347e68;border-radius:50%}
+.why-robot-body{width:18px;height:15px;border:2px solid #347e68;border-radius:5px;background:#eef8f2}
+.why-robot-arm{position:absolute;right:0;top:22px;width:9px;height:12px;border-radius:4px;background:#5da58a;transform:rotate(-25deg);transform-origin:top}
+.why-sign{display:inline-block;max-width:92px;border:1.5px solid #347e68;border-radius:6px;background:#fff;padding:5px 7px;font-size:.72rem;line-height:1.1;font-weight:750;text-align:center;box-shadow:0 2px 5px rgba(24,70,52,.08)}
+@keyframes why-robot-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@media(max-width:540px){.why-with-robot{align-items:flex-start}.why-robot-sign{min-width:100px}}
+@media(prefers-reduced-motion:reduce){.why-robot{animation:none}}
