@@ -62,3 +62,12 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 .summary-recommendation h3 { color:#24332c; font-size:17px; line-height:1.4; margin:12px 0 8px; }
 .summary-recommendation p { color:#65716a; font-size:12px; line-height:1.55; margin:0; }
 @media(max-width:760px){ .summary-answer-grid,.summary-recommendations { grid-template-columns:1fr; } }
+
+.counsel-summary { text-align:left; }
+.counsel-columns { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:20px 0; }
+.counsel-columns > div { background:#fff; border:1px solid #dce2dd; border-radius:12px; padding:20px; }
+.counsel-columns h3 { font-size:16px; margin:0 0 12px; }
+.counsel-columns ul { margin:0; padding-left:19px; color:#59655e; font-size:13px; line-height:1.65; }
+.counsel-columns li+li { margin-top:8px; }
+.counsel-note { color:#59655e; font-size:13px; line-height:1.55; margin:16px 0 0; }
+@media(max-width:760px){ .counsel-columns { grid-template-columns:1fr; } }
