@@ -143,3 +143,24 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 .regulatory-simple-card .ownership-other-input { width: 100%; padding: 11px 12px; border: 1px solid #cfd8d2; border-radius: 9px; font: inherit; }
 .regulatory-disclaimer { margin-top: 18px; color: #758079; font-size: 11px; line-height: 1.5; }
 @media(max-width:760px) { .regulatory-simple-card { padding: 17px; } .regulatory-simple-card .regulatory-factor-options { grid-template-columns: 1fr; } }
+
+
+/* Friendly robot explanations on result cards */
+.robot-explain-wrap{margin:10px 0 16px}
+.robot-explain-trigger{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid #d5e5df;background:#f4faf7;color:#174b3a;border-radius:12px;padding:9px 12px;font:inherit;font-weight:650;cursor:pointer}
+.robot-trigger-arrow{margin-left:auto;font-size:1.25rem}
+.robot-avatar{position:relative;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;animation:robot-bob 2.2s ease-in-out infinite}
+.robot-antenna{position:absolute;top:0;width:3px;height:7px;background:#4c9d83;border-radius:3px}
+.robot-antenna:after{content:"";position:absolute;top:-3px;left:-3px;width:9px;height:6px;border-radius:50%;background:#80c6a9}
+.robot-face{position:absolute;top:7px;width:30px;height:25px;border:2px solid #347e68;border-radius:9px;background:#d9f2e5;display:flex;justify-content:center;gap:6px;align-items:center}
+.robot-face i{display:block;width:4px;height:5px;background:#245e4a;border-radius:50%;animation:robot-blink 4s infinite}
+.robot-face b{position:absolute;bottom:4px;left:9px;width:10px;height:3px;border-bottom:2px solid #347e68;border-radius:50%}
+.robot-explain{display:flex;align-items:flex-start;gap:12px;margin-top:10px;padding:14px 16px;border:1px solid #c8e0d4;border-radius:14px;background:#f7fcf9;color:#35544a;animation:robot-pop .24s ease-out both}
+.robot-explain p{margin:6px 0 0;line-height:1.5}
+.robot-avatar-large{width:46px;height:46px;flex-basis:46px;margin-top:3px}
+.robot-avatar-large .robot-face{width:40px;height:33px;top:10px;border-radius:11px}
+.robot-avatar-large .robot-face b{left:13px;width:13px}
+@keyframes robot-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes robot-pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes robot-blink{0%,46%,50%,100%{transform:scaleY(1)}48%{transform:scaleY(.12)}}
+@media(prefers-reduced-motion:reduce){.robot-avatar,.robot-explain,.robot-face i{animation:none}}
