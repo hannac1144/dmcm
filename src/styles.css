@@ -71,3 +71,9 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 .counsel-columns li+li { margin-top:8px; }
 .counsel-note { color:#59655e; font-size:13px; line-height:1.55; margin:16px 0 0; }
 @media(max-width:760px){ .counsel-columns { grid-template-columns:1fr; } }
+
+.summary-recommendation h4 { color:#526058; font-size:12px; text-transform:uppercase; letter-spacing:.06em; margin:16px 0 8px; }
+.summary-recommendation ol { margin:0; padding-left:18px; color:#59655e; font-size:12px; line-height:1.6; }
+.summary-recommendation li+li { margin-top:8px; }
+.summary-flow-step ul { margin:10px 0 0; padding-left:18px; color:#65716a; font-size:12px; line-height:1.55; }
+.summary-flow-step li+li { margin-top:6px; }
