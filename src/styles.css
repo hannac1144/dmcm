@@ -124,3 +124,22 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
   .summary-flow { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .summary-flow-step { padding: 20px; }
 }
+
+/* Combined, simplified ownership + regulatory screen */
+.regulatory-standalone-page { max-width: 860px; padding-top: 42px; }
+.regulatory-page-inner .decision-header { margin: 8px 0 24px; }
+.regulatory-page-inner .decision-header h1 { font-size: clamp(34px, 4.5vw, 52px); margin-bottom: 12px; }
+.regulatory-page-inner .decision-header p { font-size: 15px; line-height: 1.55; margin-bottom: 0; }
+.regulatory-simple-card { margin: 14px 0; padding: 20px 22px; border: 1px solid #dce2dd; border-radius: 13px; background: #fff; }
+.regulatory-simple-card h2 { margin: 0 0 7px; font-size: 18px; letter-spacing: -.02em; }
+.regulatory-simple-card > p { margin: 0; color: #65716a; font-size: 13px; line-height: 1.55; }
+.regulatory-simple-card ul { margin: 12px 0 0; padding-left: 19px; color: #59645e; font-size: 13px; line-height: 1.6; }
+.regulatory-simple-card li + li { margin-top: 5px; }
+.regulatory-simple-card .regulatory-factor-options { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 13px; }
+.regulatory-simple-card .regulatory-factor-option { padding: 11px 13px; font-size: 13px; border-radius: 9px; }
+.regulatory-simple-card .regulatory-factor-option.selected { background: #f1f6f2; border-color: #537365; }
+.regulatory-simple-card .ownership-note, .regulatory-simple-card .responsibility-note { margin-top: 12px; padding: 11px 13px; border-left: 3px solid #537365; background: #f5f7f3; color: #526058; font-size: 12px; line-height: 1.55; }
+.regulatory-simple-card .ownership-other-wrap { margin-top: 12px; }
+.regulatory-simple-card .ownership-other-input { width: 100%; padding: 11px 12px; border: 1px solid #cfd8d2; border-radius: 9px; font: inherit; }
+.regulatory-disclaimer { margin-top: 18px; color: #758079; font-size: 11px; line-height: 1.5; }
+@media(max-width:760px) { .regulatory-simple-card { padding: 17px; } .regulatory-simple-card .regulatory-factor-options { grid-template-columns: 1fr; } }
