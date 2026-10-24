@@ -90,6 +90,41 @@ function downloadPDF({pathway,answers}){
  table([['Bring','Why it matters'],...docs.map(x=>[x,'Lets advisors confirm ownership, obligations, pathway assumptions, cost/timeline, and deal constraints'])]);
  const asks=pathway==='drug'?['Who owns each invention, dataset, sample, and improvement—and what rights are subject to Bayh-Dole, institutional, sponsor, or prior agreement terms?','What is the appropriate IND/NDA/BLA and clinical/CMC strategy, and which milestones/evidence are needed before a financing or license?','Who is sponsor/applicant and responsible for protocol, IRB, consent, safety reporting, manufacturing quality, regulator contact, and postapproval duties?','Are patent, regulatory exclusivity, and commercial rights aligned by product, indication, territory, and time?','If development stops or rights revert, can we lawfully and practically obtain data, regulatory files, materials, know-how, and vendor/clinical contracts?']:['Who owns the inventions, source code, datasets, and improvements; are assignment, open-source, vendor, university, or third-party rights unresolved?','What FDA classification/pathway and quality-system requirements are triggered by intended use and claims? What changes require regulatory review?','Who is HIPAA covered/business associate (if anyone), what state consumer-health-data/privacy laws apply, and what data-use/BAA/security terms are needed?','Which party handles design controls, validation, cybersecurity updates, complaints, adverse events, recalls, and postmarket duties?','Can the licensee sublicense or transfer the deal, and what happens to source code, data, support, and customers on termination or acquisition?'];
  table([['Questions for counsel / technical advisors'],...asks.map(x=>[x])],[CW]);
+ title('Expanded decision dashboard');
+ txt('This dashboard translates your answers into a comparison aid. Recommendation scores are heuristic matches to assessment tags—not probabilities of success, valuations, or legal conclusions.',{size:8.5,gap:8});
+ const dashboard=[['Decision dimension','Your assessment / planning prompt'],['Primary pathway',pathways[pathway].label],['Selected state',answers.state||'Not answered'],['Stage',stage||answers.stage||'Not answered'],['Funding target',amounts[amount]||amount||'Not provided'],['Highest-priority need',answers.priority||answers.need||'Review the answer summary above']];
+ table(dashboard,[170,358]);
+ sub('Recommendation match chart');
+ const chartTypes=[['Funding',ranked('funding')],['Licensing',ranked('license')],['Contract terms',ranked('terms')]];
+ chartTypes.forEach(([name,list])=>{
+   const top=list.slice(0,4),max=Math.max(1,...top.map(x=>x.score));
+   sub(name+' · relative answer-tag match');
+   top.forEach((entry,index)=>{
+     const barW=Math.max(4,Math.round((entry.score/max)*CW*.62));
+     page(22);
+     doc.setFont('helvetica',index===0?'bold':'normal');doc.setFontSize(8);doc.setTextColor(...gray);
+     doc.text(doc.splitTextToSize(entry.o.name,190),M,y);
+     doc.setFillColor(...light);doc.rect(M+195,y-8,CW-205,9,'F');
+     doc.setFillColor(...teal);doc.rect(M+195,y-8,Math.min(CW-205,barW),9,'F');
+     doc.setFontSize(7);doc.setTextColor(...dark);doc.text(String(entry.score),W-M,y);
+     y+=15;
+   });
+   txt('Scores indicate relative tag overlap only. Review each option’s full advantages, tradeoffs, and diligence list before making a decision.',{size:7.7,gap:5});
+ });
+ title('Expanded implementation and negotiation roadmap');
+ const roadmap=[['1 · Verify asset and authority','Collect ownership chain, assignments, prior licenses, grant/institution terms, and approvals.'],['2 · Confirm pathway and jurisdiction','Document intended use/indication, product role, data flow, locations, and state activity map. Confirm regulatory assumptions with qualified advisors.'],['3 · Build milestone budget','Estimate costs and timing by milestone, including personnel, evidence, quality, regulatory, manufacturing/vendor, legal, and contingency. Do not invent missing amounts.'],['4 · Compare routes and counterparties','Use the score chart as a screening aid; compare control, contribution, economics, exclusivity, rights, obligations, flexibility, and exit.'],['5 · Negotiate objective terms','Write measurable deliverables, deadlines, acceptance, reporting, payment triggers, governance, change control, cure periods, termination, and reversion.'],['6 · Set the compliance calendar','Assign owners and dates for submissions, licenses, privacy/security reviews, grant reporting, quality, renewals, insurance, and contract milestones.']];
+ table([['Workstream','Action / deliverable'],...roadmap],[155,373]);
+ sub('Lifecycle flow');
+ const nodes=['ASSESS + VERIFY','FUND + DEVELOP','LICENSE / PARTNER','MONITOR + EXIT'];
+ const nw=(CW-18)/4;
+ nodes.forEach((node,i)=>{
+   const xx=M+i*(nw+6);
+   doc.setFillColor(...(i===3?light:pale));doc.setDrawColor(...teal);doc.roundedRect(xx,y,nw,34,4,4,'FD');
+   doc.setFont('helvetica','bold');doc.setFontSize(7.4);doc.setTextColor(...dark);doc.text(doc.splitTextToSize(node,nw-8),xx+4,y+13);
+   if(i<3){doc.setFontSize(11);doc.setTextColor(...teal);doc.text('›',xx+nw+1,y+22);}
+ });
+ y+=45;
+ txt('State-specific legal note: the selected state is a starting point, not a conclusion that only one state’s law applies. The final report should identify the actual state statutes, administrative regulations, licensing-board rules, and official guidance after mapping where the company operates, where professionals and patients are located, and what activities it performs. Any unverified state-law item must be labeled as an issue for counsel—not represented as a confirmed legal requirement.',{size:8.3,gap:8});
  title('References and official starting points');
  const refs=pathway==='drug'?[
  ['FDA drug development and review definitions','https://www.fda.gov/drugs/investigational-new-drug-application-ind/drug-development-and-review-definitions'],
