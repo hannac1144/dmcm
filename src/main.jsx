@@ -276,28 +276,6 @@ function downloadPDF({pathway,answers}){
  table([['Step','Actions','Concrete output'],...summaryRoadmap],[150,270,108]);
  txt(pathway==='drug'?'Drug / therapeutic tailoring: tailor milestones and responsibilities to development, clinical, manufacturing, and regulatory needs.':'Healthcare technology tailoring: tailor milestones and responsibilities to intended use, validation, data/privacy, product requirements, and implementation.',{size:8.3,gap:5});
  txt('This checklist is a planning aid, not a legal or regulatory determination. Review the detailed report with appropriate legal, regulatory, and business advisors before signing or committing funds.',{size:8.3,gap:10});
- title('Expanded decision dashboard');
- txt('This dashboard translates your answers into a comparison aid. Recommendation scores are heuristic matches to assessment tags—not probabilities of success, valuations, or legal conclusions.',{size:8.5,gap:8});
- const dashboard=[['Decision dimension','Your assessment / planning prompt'],['Primary pathway',pathways[pathway].label],['Selected state',answers.state||'Not answered'],['Stage',stage||answers.stage||'Not answered'],['Funding target',amounts[amount]||amount||'Not provided'],['Highest-priority need',answers.priority||answers.need||'Review the answer summary above']];
- table(dashboard,[170,358]);
- sub('Recommendation match chart');
- const chartTypes=[['Funding',ranked('funding')],['Licensing',ranked('license')],['Contract terms',ranked('terms')]];
- chartTypes.forEach(([name,list])=>{
-   const top=list.slice(0,4),max=Math.max(1,...top.map(x=>x.score));
-   sub(name+' · relative answer-tag match');
-   top.forEach((entry,index)=>{
-     const barW=Math.max(4,Math.round((entry.score/max)*CW*.62));
-     page(22);
-     doc.setFont('helvetica',index===0?'bold':'normal');doc.setFontSize(8);doc.setTextColor(...gray);
-     doc.text(doc.splitTextToSize(entry.o.name,190),M,y);
-     doc.setFillColor(...light);doc.rect(M+195,y-8,CW-205,9,'F');
-     doc.setFillColor(...teal);doc.rect(M+195,y-8,Math.min(CW-205,barW),9,'F');
-     doc.setFontSize(7);doc.setTextColor(...dark);doc.text(String(entry.score),W-M,y);
-     y+=15;
-   });
-   txt('Scores indicate relative tag overlap only. Review the options as screening prompts, not as a ranking of legal or commercial suitability.',{size:7.7,gap:5});
- });
- txt('The dashboard ends here. Use the comparison as a starting point for discussion with qualified legal, regulatory, and business advisors.',{size:8.2,gap:8});
  const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(110,120,128);doc.text('HealthTech Pathways · Educational issue-spotting only',M,760);doc.text('Page '+i+' / '+pages,W-M,760,{align:'right'});}
  const state=(answers.state||'assessment').toLowerCase().replace(/[^a-z0-9]+/g,'-');doc.save('healthtech-pathways-'+pathway+'-'+state+'-comprehensive.pdf');
 }
