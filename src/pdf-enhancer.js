@@ -24,7 +24,7 @@ function guide(name,i){const stage=findInput(i,'What stage')||'your current stag
 }
 function generateVisualPDF(){const i=storedInputs(),doc=new jsPDF({unit:'pt',format:'letter'}),W=612,H=792,M=48,CW=516;let y=0,page=1;const set=c=>doc.setTextColor(...c),fill=c=>doc.setFillColor(...c),stroke=c=>doc.setDrawColor(...c);const footer=()=>{stroke(C.line);doc.line(M,H-38,W-M,H-38);doc.setFont('helvetica','normal');doc.setFontSize(7.3);set(C.muted);doc.text('HealthTech Pathways | Educational decision support - not legal, medical, tax, investment, or financial advice.',M,H-23);doc.text(String(page),W-M,H-23,{align:'right'})};const newPage=()=>{footer();doc.addPage();page++;y=54};const need=h=>{if(y+h>H-55)newPage()};const text=(t,size=9.3,bold=false,color=C.text,gap=7)=>{doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);set(color);const l=doc.splitTextToSize(clean(t),CW);need(l.length*(size+3)+gap);doc.text(l,M,y);y+=l.length*(size+3)+gap};const heading=(k,t,s='')=>{need(72);doc.setFont('helvetica','bold');doc.setFontSize(8);set(C.gold);doc.text(k,M,y);y+=17;doc.setFontSize(18);set(C.green);doc.text(doc.splitTextToSize(t,CW),M,y);y+=25;if(s)text(s,9.3,false,C.muted,14)};const brief=(value,max=42)=>{const words=clean(value).split(' ');return words.length>max?words.slice(0,max).join(' ')+'…':words.join(' ')};const card=(title,body,badge='')=>{const l=doc.splitTextToSize(brief(body,42),CW-32),h=48+l.length*11;need(h+10);fill(C.sage);stroke(C.line);doc.roundedRect(M,y,CW,h,9,9,'FD');doc.setFont('helvetica','bold');doc.setFontSize(10.5);set(C.green);doc.text(title,M+16,y+22);if(badge){doc.setFontSize(7);set(C.gold);doc.text(badge.toUpperCase(),W-M-16,y+22,{align:'right'})}doc.setFont('helvetica','normal');doc.setFontSize(8.7);set(C.text);doc.text(l,M+16,y+41);y+=h+10};const detail=(title,g,badge='')=>{
  const ss=[['THE TAKEAWAY',brief(g.meaning,24)],['WHY IT MATTERS',brief(g.why,28)],['KEY POINTS TO CHECK',brief(g.specific,48)],['FLAG FOR COUNSEL',brief(g.trigger,25)],['ASK',brief(g.ask,24)]];
- let h=42;ss.forEach(([,v])=>h+=13+doc.splitTextToSize(v,CW-38).length*9);
+ let h=46;ss.forEach(([,v])=>h+=13+doc.splitTextToSize(v,CW-38).length*9);
  need(h+12);fill(C.pale);stroke(C.line);doc.roundedRect(M,y,CW,h,9,9,'FD');
  let cy=y+21;doc.setFont('helvetica','bold');doc.setFontSize(10.5);set(C.green);doc.text(title,M+16,cy);
  if(badge){doc.setFontSize(7);set(C.gold);doc.text(badge.toUpperCase(),W-M-16,cy,{align:'right'})}
@@ -32,7 +32,7 @@ function generateVisualPDF(){const i=storedInputs(),doc=new jsPDF({unit:'pt',for
  y+=h+10
 };const details=a=>a.forEach((v,j)=>detail(`${j+1}. ${v}`,guide(v,i),j===0?'Primary recommendation':'Also consider'));
  const decisionTree=(title,root,branches)=>{
-   need(238); heading('DECISION MAP',title,root);
+   need(270); heading('DECISION MAP',title,root);
    const top=y, gap=12, cardW=(CW-gap)/2, cardH=86, rootW=360, rootX=M+(CW-rootW)/2;
    fill(C.green);stroke(C.green);doc.roundedRect(rootX,top,rootW,32,7,7,'F');
    doc.setFont('helvetica','bold');doc.setFontSize(8.4);set(C.white);doc.text(doc.splitTextToSize(root,rootW-24),rootX+12,top+20);
@@ -45,7 +45,7 @@ function generateVisualPDF(){const i=storedInputs(),doc=new jsPDF({unit:'pt',for
    y=row2+cardH+18;
  };
  const comparisonChart=()=>{
-   need(255);heading('AT A GLANCE','Compare the main pathways','A qualitative comparison—not a score or prediction. The right choice depends on eligibility, timing, development needs, and the rights the company is prepared to share.');
+   need(330);heading('AT A GLANCE','Compare the main pathways','A qualitative comparison—not a score or prediction. The right choice depends on eligibility, timing, development needs, and the rights the company is prepared to share.');
    const cols=[112,126,128,150],headers=['PATHWAY','WHAT IT PRIORITIZES','WHAT IT CAN ADD','KEY TRADE-OFF TO TEST'];
    const rows=[['Non-dilutive funding','Ownership preservation','Milestone-specific capital','Eligibility, timing, permitted uses, IP and reporting duties'],['Equity financing','Flexible capital and growth','Runway, team and execution capacity','Dilution, governance, investor rights and future financing constraints'],['Strategic partnership','Capital plus capabilities','Development, regulatory or commercial expertise','Control, exclusivity, data/IP rights and termination'],['Self-development','Operational control','Direct control of priorities and assets','Cash runway, internal expertise and execution risk']];
    let yy=y,xx=M;fill(C.green);doc.roundedRect(M,yy,CW,28,5,5,'F');
