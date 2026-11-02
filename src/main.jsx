@@ -282,41 +282,6 @@ function downloadPDF({pathway,answers}){
  table(dashboard,[170,358]);
  sub('Recommendation match chart');
  const chartTypes=[['Funding',ranked('funding')],['Licensing',ranked('license')],['Contract terms',ranked('terms')]];
- // Put the practical recommendation analysis immediately beside the summary/dashboard,
- // so users do not have to find a later section to understand the choices.
- title('Detailed recommendations: advantages, drawbacks, and reminders');
- txt('For each decision area, this section identifies the highest answer-match option and explains its practical benefits, risks, and checks to complete before acting. The match is a screening aid based on the answers recorded—not a legal conclusion or guarantee of suitability.',{size:8.5,gap:8});
- const stageForRec=label(qs.find(q=>q.id==='stage')||{options:[]},answers.stage);
- const orgForRec=label(qs.find(q=>q.id==='company')||{options:[]},answers.company);
- const structureForRec=label(qs.find(q=>q.id==='legalStructure')||{options:[]},answers.legalStructure);
- const stateForRec=answers.state||'the selected jurisdiction';
- const needQForRec=qs.find(q=>q.id==='funding'||q.id==='need');
- const needForRec=needQForRec?label(needQForRec,answers[needQForRec.id]):'the next development need';
- const priorityQForRec=qs.find(q=>q.id==='priority');
- const priorityForRec=(Array.isArray(answers.priority)?answers.priority:[answers.priority].filter(Boolean)).map(v=>label(priorityQForRec||{options:[]},v));
- chartTypes.forEach(([name,list])=>{
-   const top=list[0],o=top?.o;if(!o)return;
-   line();
-   sub(name+' · RECOMMENDED TOP CHOICE');
-   txt(o.name,{size:12,bold:true,color:dark,gap:5});
-   txt('Relative answer-match: '+top.score+' | Stage: '+stageForRec+' | Organization: '+orgForRec+' | Legal structure: '+structureForRec+' | State: '+stateForRec,{size:7.8,color:teal,gap:5});
-   sub('Advantages');
-   (o.pros||[]).forEach(v=>txt('• '+v,{size:8.4,indent:5,gap:2}));
-   sub('Drawbacks and risks');
-   (o.cons||[]).forEach(v=>txt('• '+v,{size:8.4,indent:5,gap:2}));
-   sub('Important reminders before choosing');
-   txt(o.consider||'Compare the economic terms, control, performance obligations, risk allocation, and exit rights before proceeding.',{size:8.4,gap:4});
-   const reminders=[
-     'Confirm that this option addresses the project’s stated next need: '+needForRec+'.',
-     priorityForRec.length?'Test the negotiated terms against the stated priority or priorities: '+priorityForRec.join(', ')+'.':'Revisit the project’s negotiation priorities and decide which rights must be retained.',
-     stageForRec!=='Not answered'?'At the '+stageForRec.toLowerCase()+' stage, tie obligations and funding to realistic, measurable next milestones.':'Define the next measurable milestone and the resources needed to reach it.',
-     orgForRec!=='Not answered'?'Confirm approval authority and any institutional, investor, board, or employer restrictions for the selected organization ('+orgForRec+').':'Confirm which person or entity has authority to approve and sign the transaction.',
-     structureForRec!=='Not answered'?'Confirm the selected entity structure ('+structureForRec+') can own/license the asset and perform the contemplated activity.':'Confirm entity authority, ownership, and required approvals.',
-     'For '+stateForRec+', verify which state-specific licenses and healthcare rules are actually triggered by the planned activities; do not assume every listed rule applies.'
-   ];
-   reminders.forEach(v=>txt('• '+v,{size:8.2,indent:5,gap:2}));
-   if(list[1]?.o)txt('Alternative to compare: '+list[1].o.name+'. Compare its tradeoffs against the top choice before committing.',{size:8.2,bold:true,gap:4});
- });
  chartTypes.forEach(([name,list])=>{
    const top=list.slice(0,4),max=Math.max(1,...top.map(x=>x.score));
    sub(name+' · relative answer-tag match');
@@ -330,83 +295,9 @@ function downloadPDF({pathway,answers}){
      doc.setFontSize(7);doc.setTextColor(...dark);doc.text(String(entry.score),W-M,y);
      y+=15;
    });
-   txt('Scores indicate relative tag overlap only. Review each option’s full advantages, tradeoffs, and diligence list before making a decision.',{size:7.7,gap:5});
+   txt('Scores indicate relative tag overlap only. Review the options as screening prompts, not as a ranking of legal or commercial suitability.',{size:7.7,gap:5});
  });
- title('Top choices: detailed advantages, drawbacks, and fit');
- txt('The following analysis expands the highest-scoring option in each decision area. The match is based on overlap between the selections you made and each option’s fit tags; it is a screening aid, not an objective ranking or a substitute for reviewing the alternatives.',{size:8.5,gap:9});
- const answerMatches=option=>{
-   const matches=[];
-   qs.forEach(q=>{
-     const raw=answers[q.id],values=Array.isArray(raw)?raw:[raw].filter(Boolean);
-     values.forEach(value=>{
-       if(option.fit.includes(value)){
-         const selected=q.options.find(([,v])=>v===value)?.[0]||value;
-         matches.push(q.title+': '+selected);
-       }
-     });
-   });
-   return [...new Set(matches)];
- };
- const stageLabel=label(qs.find(q=>q.id==='stage')||{options:[]},answers.stage);
- const companyLabel=label(qs.find(q=>q.id==='company')||{options:[]},answers.company);
- const structureLabel=label(qs.find(q=>q.id==='legalStructure')||{options:[]},answers.legalStructure);
- const needQuestion=qs.find(q=>q.id==='funding'||q.id==='need');
- const needLabel=needQuestion?label(needQuestion,answers[needQuestion.id]):'';
- const priorityQuestion=qs.find(q=>q.id==='priority');
- const priorityLabels=(Array.isArray(answers.priority)?answers.priority:[answers.priority].filter(Boolean)).map(v=>label(priorityQuestion||{options:[]},v));
- const contextLine=[stageLabel&&'stage: '+stageLabel,companyLabel&&'organization: '+companyLabel,structureLabel&&'legal structure: '+structureLabel,answers.state&&'state: '+answers.state,needLabel&&'next need: '+needLabel,priorityLabels.length&&'priority: '+priorityLabels.join(', ')].filter(Boolean).join('; ');
- chartTypes.forEach(([name,list])=>{
-   const winner=list[0],runner=list[1],o=winner?.o;
-   if(!o)return;
-   line();
-   sub(name+' · TOP CHOICE');
-   txt(o.name,{size:12,bold:true,color:dark,gap:6});
-   txt('Answer-match score: '+winner.score+' relative tag match'+(contextLine?' | Your context: '+contextLine:''),{size:8,color:teal,gap:7});
-   const matched=answerMatches(o);
-   if(matched.length){
-     sub('Why this option ranked first');
-     matched.forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:2}));
-     txt('These selections overlap with the option’s stated fit criteria. The overlap explains its position in the screening chart; it does not establish that the option is feasible or legally appropriate.',{size:8,gap:6});
-   } else {
-     sub('Why this option is worth reviewing');
-     txt('No direct fit-tag overlap was identified from the recorded selections. It ranked first because the available options had no stronger tag match; treat it as a discussion candidate and compare it carefully with the alternatives.',{size:8.5,gap:6});
-   }
-   sub('Potential advantages');
-   (o.pros||[]).forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:3}));
-   if(priorityLabels.length)txt('• Priority alignment to examine: '+priorityLabels.join(', ')+'. Confirm that the proposed structure actually preserves or advances this priority in the negotiated documents.',{size:8.5,indent:5,gap:3});
-   if(needLabel)txt('• Needs alignment to examine: '+needLabel+'. Confirm the option supplies the capital, capabilities, or development support needed for this specific next step.',{size:8.5,indent:5,gap:3});
-   sub('Potential drawbacks and risks');
-   (o.cons||[]).forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:3}));
-   sub('Questions and safeguards before choosing');
-   txt(o.consider||'Compare the cost, timing, control, risk allocation, and exit consequences before proceeding.',{size:8.5,gap:5});
-   const tailored=[];
-   if(stageLabel)tailored.push('At the '+stageLabel.toLowerCase()+' stage, test whether the option can support the next evidence or development milestone without creating obligations that exceed the project’s current capacity.');
-   if(companyLabel)tailored.push('For an organization described as '+companyLabel.toLowerCase()+', confirm who has authority to approve the transaction and whether institutional, investor, board, or employer approvals are required.');
-   if(structureLabel)tailored.push('For the selected structure ('+structureLabel+'), confirm that the entity has authority to conduct the proposed activity, own or license the relevant assets, and receive the contemplated funding or payments.');
-   if(answers.state)tailored.push('Because the selected state is '+answers.state+', check state-specific entity, professional-practice, privacy, facility, pharmacy, and other licensing issues that are actually triggered by the business model.');
-   if(tailored.length){
-     sub('Application to your project');
-     tailored.forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:3}));
-   }
-   if(runner?.o){
-     sub('Alternative to compare');
-     txt(runner.o.name+' (next-highest match; score '+runner.score+'). Compare this alternative if the top choice’s drawbacks conflict with your control, timing, funding, expertise, or long-term value priorities.',{size:8.5,gap:5});
-   }
- });
- title('Expanded implementation and negotiation roadmap');
- const roadmap=[['1 · Verify asset and authority','Collect ownership chain, assignments, prior licenses, grant/institution terms, and approvals.'],['2 · Confirm pathway and jurisdiction','Document intended use/indication, product role, data flow, locations, and state activity map. Confirm regulatory assumptions with qualified advisors.'],['3 · Build milestone budget','Estimate costs and timing by milestone, including personnel, evidence, quality, regulatory, manufacturing/vendor, legal, and contingency. Do not invent missing amounts.'],['4 · Compare routes and counterparties','Use the score chart as a screening aid; compare control, contribution, economics, exclusivity, rights, obligations, flexibility, and exit.'],['5 · Negotiate objective terms','Write measurable deliverables, deadlines, acceptance, reporting, payment triggers, governance, change control, cure periods, termination, and reversion.'],['6 · Set the compliance calendar','Assign owners and dates for submissions, licenses, privacy/security reviews, grant reporting, quality, renewals, insurance, and contract milestones.']];
- table([['Workstream','Action / deliverable'],...roadmap],[155,373]);
- sub('Lifecycle flow');
- const nodes=['ASSESS + VERIFY','FUND + DEVELOP','LICENSE / PARTNER','MONITOR + EXIT'];
- const nw=(CW-18)/4;
- nodes.forEach((node,i)=>{
-   const xx=M+i*(nw+6);
-   doc.setFillColor(...(i===3?light:pale));doc.setDrawColor(...teal);doc.roundedRect(xx,y,nw,34,4,4,'FD');
-   doc.setFont('helvetica','bold');doc.setFontSize(7.4);doc.setTextColor(...dark);doc.text(doc.splitTextToSize(node,nw-8),xx+4,y+13);
-   if(i<3){doc.setFontSize(11);doc.setTextColor(...teal);doc.text('›',xx+nw+1,y+22);}
- });
- y+=45;
- txt('State-specific legal note: the selected state is a starting point, not a conclusion that only one state’s law applies. The final report should identify the actual state statutes, administrative regulations, licensing-board rules, and official guidance after mapping where the company operates, where professionals and patients are located, and what activities it performs. Any unverified state-law item must be labeled as an issue for counsel—not represented as a confirmed legal requirement.',{size:8.3,gap:8});
+ txt('The dashboard ends here. Use the comparison as a starting point for discussion with qualified legal, regulatory, and business advisors.',{size:8.2,gap:8});
  const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(110,120,128);doc.text('HealthTech Pathways · Educational issue-spotting only',M,760);doc.text('Page '+i+' / '+pages,W-M,760,{align:'right'});}
  const state=(answers.state||'assessment').toLowerCase().replace(/[^a-z0-9]+/g,'-');doc.save('healthtech-pathways-'+pathway+'-'+state+'-comprehensive.pdf');
 }
