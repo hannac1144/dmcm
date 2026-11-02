@@ -249,6 +249,41 @@ function downloadPDF({pathway,answers}){
  table(dashboard,[170,358]);
  sub('Recommendation match chart');
  const chartTypes=[['Funding',ranked('funding')],['Licensing',ranked('license')],['Contract terms',ranked('terms')]];
+ // Put the practical recommendation analysis immediately beside the summary/dashboard,
+ // so users do not have to find a later section to understand the choices.
+ title('Detailed recommendations: advantages, drawbacks, and reminders');
+ txt('For each decision area, this section identifies the highest answer-match option and explains its practical benefits, risks, and checks to complete before acting. The match is a screening aid based on the answers recorded—not a legal conclusion or guarantee of suitability.',{size:8.5,gap:8});
+ const stageForRec=label(qs.find(q=>q.id==='stage')||{options:[]},answers.stage);
+ const orgForRec=label(qs.find(q=>q.id==='company')||{options:[]},answers.company);
+ const structureForRec=label(qs.find(q=>q.id==='legalStructure')||{options:[]},answers.legalStructure);
+ const stateForRec=answers.state||'the selected jurisdiction';
+ const needQForRec=qs.find(q=>q.id==='funding'||q.id==='need');
+ const needForRec=needQForRec?label(needQForRec,answers[needQForRec.id]):'the next development need';
+ const priorityQForRec=qs.find(q=>q.id==='priority');
+ const priorityForRec=(Array.isArray(answers.priority)?answers.priority:[answers.priority].filter(Boolean)).map(v=>label(priorityQForRec||{options:[]},v));
+ chartTypes.forEach(([name,list])=>{
+   const top=list[0],o=top?.o;if(!o)return;
+   line();
+   sub(name+' · RECOMMENDED TOP CHOICE');
+   txt(o.name,{size:12,bold:true,color:dark,gap:5});
+   txt('Relative answer-match: '+top.score+' | Stage: '+stageForRec+' | Organization: '+orgForRec+' | Legal structure: '+structureForRec+' | State: '+stateForRec,{size:7.8,color:teal,gap:5});
+   sub('Advantages');
+   (o.pros||[]).forEach(v=>txt('• '+v,{size:8.4,indent:5,gap:2}));
+   sub('Drawbacks and risks');
+   (o.cons||[]).forEach(v=>txt('• '+v,{size:8.4,indent:5,gap:2}));
+   sub('Important reminders before choosing');
+   txt(o.consider||'Compare the economic terms, control, performance obligations, risk allocation, and exit rights before proceeding.',{size:8.4,gap:4});
+   const reminders=[
+     'Confirm that this option addresses the project’s stated next need: '+needForRec+'.',
+     priorityForRec.length?'Test the negotiated terms against the stated priority or priorities: '+priorityForRec.join(', ')+'.':'Revisit the project’s negotiation priorities and decide which rights must be retained.',
+     stageForRec!=='Not answered'?'At the '+stageForRec.toLowerCase()+' stage, tie obligations and funding to realistic, measurable next milestones.':'Define the next measurable milestone and the resources needed to reach it.',
+     orgForRec!=='Not answered'?'Confirm approval authority and any institutional, investor, board, or employer restrictions for the selected organization ('+orgForRec+').':'Confirm which person or entity has authority to approve and sign the transaction.',
+     structureForRec!=='Not answered'?'Confirm the selected entity structure ('+structureForRec+') can own/license the asset and perform the contemplated activity.':'Confirm entity authority, ownership, and required approvals.',
+     'For '+stateForRec+', verify which state-specific licenses and healthcare rules are actually triggered by the planned activities; do not assume every listed rule applies.'
+   ];
+   reminders.forEach(v=>txt('• '+v,{size:8.2,indent:5,gap:2}));
+   if(list[1]?.o)txt('Alternative to compare: '+list[1].o.name+'. Compare its tradeoffs against the top choice before committing.',{size:8.2,bold:true,gap:4});
+ });
  chartTypes.forEach(([name,list])=>{
    const top=list.slice(0,4),max=Math.max(1,...top.map(x=>x.score));
    sub(name+' · relative answer-tag match');
