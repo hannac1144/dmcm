@@ -264,6 +264,67 @@ function downloadPDF({pathway,answers}){
    });
    txt('Scores indicate relative tag overlap only. Review each option’s full advantages, tradeoffs, and diligence list before making a decision.',{size:7.7,gap:5});
  });
+ title('Top choices: detailed advantages, drawbacks, and fit');
+ txt('The following analysis expands the highest-scoring option in each decision area. The match is based on overlap between the selections you made and each option’s fit tags; it is a screening aid, not an objective ranking or a substitute for reviewing the alternatives.',{size:8.5,gap:9});
+ const answerMatches=option=>{
+   const matches=[];
+   qs.forEach(q=>{
+     const raw=answers[q.id],values=Array.isArray(raw)?raw:[raw].filter(Boolean);
+     values.forEach(value=>{
+       if(option.fit.includes(value)){
+         const selected=q.options.find(([,v])=>v===value)?.[0]||value;
+         matches.push(q.title+': '+selected);
+       }
+     });
+   });
+   return [...new Set(matches)];
+ };
+ const stageLabel=label(qs.find(q=>q.id==='stage')||{options:[]},answers.stage);
+ const companyLabel=label(qs.find(q=>q.id==='company')||{options:[]},answers.company);
+ const structureLabel=label(qs.find(q=>q.id==='legalStructure')||{options:[]},answers.legalStructure);
+ const needQuestion=qs.find(q=>q.id==='funding'||q.id==='need');
+ const needLabel=needQuestion?label(needQuestion,answers[needQuestion.id]):'';
+ const priorityQuestion=qs.find(q=>q.id==='priority');
+ const priorityLabels=(Array.isArray(answers.priority)?answers.priority:[answers.priority].filter(Boolean)).map(v=>label(priorityQuestion||{options:[]},v));
+ const contextLine=[stageLabel&&'stage: '+stageLabel,companyLabel&&'organization: '+companyLabel,structureLabel&&'legal structure: '+structureLabel,answers.state&&'state: '+answers.state,needLabel&&'next need: '+needLabel,priorityLabels.length&&'priority: '+priorityLabels.join(', ')].filter(Boolean).join('; ');
+ chartTypes.forEach(([name,list])=>{
+   const winner=list[0],runner=list[1],o=winner?.o;
+   if(!o)return;
+   line();
+   sub(name+' · TOP CHOICE');
+   txt(o.name,{size:12,bold:true,color:dark,gap:6});
+   txt('Answer-match score: '+winner.score+' relative tag match'+(contextLine?' | Your context: '+contextLine:''),{size:8,color:teal,gap:7});
+   const matched=answerMatches(o);
+   if(matched.length){
+     sub('Why this option ranked first');
+     matched.forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:2}));
+     txt('These selections overlap with the option’s stated fit criteria. The overlap explains its position in the screening chart; it does not establish that the option is feasible or legally appropriate.',{size:8,gap:6});
+   } else {
+     sub('Why this option is worth reviewing');
+     txt('No direct fit-tag overlap was identified from the recorded selections. It ranked first because the available options had no stronger tag match; treat it as a discussion candidate and compare it carefully with the alternatives.',{size:8.5,gap:6});
+   }
+   sub('Potential advantages');
+   (o.pros||[]).forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:3}));
+   if(priorityLabels.length)txt('• Priority alignment to examine: '+priorityLabels.join(', ')+'. Confirm that the proposed structure actually preserves or advances this priority in the negotiated documents.',{size:8.5,indent:5,gap:3});
+   if(needLabel)txt('• Needs alignment to examine: '+needLabel+'. Confirm the option supplies the capital, capabilities, or development support needed for this specific next step.',{size:8.5,indent:5,gap:3});
+   sub('Potential drawbacks and risks');
+   (o.cons||[]).forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:3}));
+   sub('Questions and safeguards before choosing');
+   txt(o.consider||'Compare the cost, timing, control, risk allocation, and exit consequences before proceeding.',{size:8.5,gap:5});
+   const tailored=[];
+   if(stageLabel)tailored.push('At the '+stageLabel.toLowerCase()+' stage, test whether the option can support the next evidence or development milestone without creating obligations that exceed the project’s current capacity.');
+   if(companyLabel)tailored.push('For an organization described as '+companyLabel.toLowerCase()+', confirm who has authority to approve the transaction and whether institutional, investor, board, or employer approvals are required.');
+   if(structureLabel)tailored.push('For the selected structure ('+structureLabel+'), confirm that the entity has authority to conduct the proposed activity, own or license the relevant assets, and receive the contemplated funding or payments.');
+   if(answers.state)tailored.push('Because the selected state is '+answers.state+', check state-specific entity, professional-practice, privacy, facility, pharmacy, and other licensing issues that are actually triggered by the business model.');
+   if(tailored.length){
+     sub('Application to your project');
+     tailored.forEach(v=>txt('• '+v,{size:8.5,indent:5,gap:3}));
+   }
+   if(runner?.o){
+     sub('Alternative to compare');
+     txt(runner.o.name+' (next-highest match; score '+runner.score+'). Compare this alternative if the top choice’s drawbacks conflict with your control, timing, funding, expertise, or long-term value priorities.',{size:8.5,gap:5});
+   }
+ });
  title('Expanded implementation and negotiation roadmap');
  const roadmap=[['1 · Verify asset and authority','Collect ownership chain, assignments, prior licenses, grant/institution terms, and approvals.'],['2 · Confirm pathway and jurisdiction','Document intended use/indication, product role, data flow, locations, and state activity map. Confirm regulatory assumptions with qualified advisors.'],['3 · Build milestone budget','Estimate costs and timing by milestone, including personnel, evidence, quality, regulatory, manufacturing/vendor, legal, and contingency. Do not invent missing amounts.'],['4 · Compare routes and counterparties','Use the score chart as a screening aid; compare control, contribution, economics, exclusivity, rights, obligations, flexibility, and exit.'],['5 · Negotiate objective terms','Write measurable deliverables, deadlines, acceptance, reporting, payment triggers, governance, change control, cure periods, termination, and reversion.'],['6 · Set the compliance calendar','Assign owners and dates for submissions, licenses, privacy/security reviews, grant reporting, quality, renewals, insurance, and contract milestones.']];
  table([['Workstream','Action / deliverable'],...roadmap],[155,373]);
