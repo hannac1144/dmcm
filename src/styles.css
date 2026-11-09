@@ -203,3 +203,17 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 @keyframes robot-modal-pop{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:560px){.robot-modal{gap:14px;padding:26px 18px 20px}.robot-avatar-large{transform:scale(.85);transform-origin:top left}}
 @media(prefers-reduced-motion:reduce){.robot-modal-backdrop,.robot-modal{animation:none}}
+
+/* Summary page: consistent two-column cards and readable priority lists */
+.complete .state-summary { text-align:left; margin-top:28px; }
+.complete .state-summary > h2 { margin:8px 0 10px; }
+.complete .summary-flow { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:stretch; margin-top:18px; }
+.complete .summary-flow > .summary-flow-step { min-width:0; padding:22px; }
+.complete .summary-flow-arrow { display:none; }
+.complete .summary-priorities { grid-column:1 / -1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:0; }
+.complete .summary-priorities .summary-flow-step { min-width:0; padding:22px; }
+.complete .summary-flow-step ul { margin:12px 0 0; padding-left:20px; font-size:13px; line-height:1.65; overflow-wrap:anywhere; }
+.complete .summary-flow-step li+li { margin-top:9px; }
+.complete .summary-flow-step p { line-height:1.6; }
+.complete .summary-flow-step p strong { display:inline-block; margin-top:10px; }
+@media(max-width:760px){ .complete .summary-flow,.complete .summary-priorities { grid-template-columns:1fr; }.complete .summary-priorities { grid-column:auto; } }
