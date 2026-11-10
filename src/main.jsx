@@ -162,7 +162,7 @@ function downloadPDF({pathway,answers}){
  :[['Product and intended use','For '+product+', document functions, intended users, claims, patient impact, inputs/outputs, and data flows. Assess FDA status function-by-function; “software” or “device” alone does not settle classification.'],['Stage gate','At '+chosenStage+', define the next prototype, validation, clinical, or regulatory deliverable, acceptance criteria, accountable lead, budget, and decision date.'],['Ownership and authority','For '+org+', confirm ownership of code, inventions, datasets, and improvements; review founder/employee assignments, institution/vendor rights, grants, and required approvals.'],['Funding and partner gap','Your stated need is '+need+'. Tie the amount or partner work package to a defined milestone, deliverables, timing, and rights retained.'],['Deal guardrail','Your priority is '+priority+'. Translate it into specific limits on control, exclusivity, economics, IP/data rights, milestones, and termination/reversion.']];
  table([['Decision','What to resolve'],...focus],[150,378]);
  sub('How your specific selections change the work');
- const structure=answer('legalStructure');
+ const structure=answer('legalStructure'),selectedState=answers.state||'';
  const tailored=[];
  if(pathway==='drug'){
   tailored.push(['Selected therapeutic','For '+product+', make the development plan identify product-specific potency, safety, dose, formulation, and CMC questions. For a biologic or cell/gene therapy, include characterization, comparability, chain-of-identity/custody where relevant, and specialized manufacturing controls; for a small molecule, include formulation, impurity, stability, and process-control questions.']);
@@ -205,7 +205,7 @@ function downloadPDF({pathway,answers}){
  text('These frameworks are screening prompts, not a conclusion that every rule applies. Confirm applicability based on product, role, claims, activities, funding, data, and location.',{size:8,gap:5});
  table([['Topic','Authority / practical question'],...laws],[170,358]);
  title('6. State-specific issue spotting');
- const selectedState=answers.state||'',profile=stateLawProfiles[selectedState]||(additionalStateLawProfiles[selectedState]?[{topic:'Telehealth and professional-practice rules',...additionalStateLawProfiles[selectedState]}]:[]);
+ const profile=stateLawProfiles[selectedState]||(additionalStateLawProfiles[selectedState]?[{topic:'Telehealth and professional-practice rules',...additionalStateLawProfiles[selectedState]}]:[]);
  const tech=answers.technology||'',isClinical=tech==='digital'||tech==='platform'||tech==='other'||tech==='diagnostic'||tech==='device'||['clinical','regulatory','commercial'].includes(answers.stage)||['approved','phase-1','phase-2','phase-3'].includes(answers.stage);
  const needsPrivacy=tech==='digital'||tech==='platform'||tech==='diagnostic'||tech==='device'||['clinical','regulatory','commercial'].includes(answers.stage)||['approved','phase-1','phase-2','phase-3'].includes(answers.stage);
  const relevant=profile.filter(item=>{if(item.when==='drug')return pathway==='drug';if(item.when==='clinical')return isClinical;if(item.when==='privacy')return needsPrivacy;if(item.when==='facility')return ['diagnostic','device'].includes(tech)||pathway==='drug';if(item.when==='entity')return ['health-system','university','established','startup'].includes(answers.company)||!!answers.legalStructure;return true;});
