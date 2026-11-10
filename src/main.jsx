@@ -119,7 +119,7 @@ function ResultsSection({type,answers,pathway,onNext,nextLabel,onBack}){const [r
 function downloadPDF({pathway,answers}){
  const doc=new jsPDF({unit:'pt',format:'letter'}),W=612,M=42,CW=528,TOP=54,BOTTOM=744;let y=TOP;
  const dark=[25,48,67],teal=[31,105,113],gray=[52,62,72],light=[235,243,244],pale=[248,250,251];
- const qs=pathways[pathway].questions;
+ const qs=pathways[pathway].questions,custom=otherEntries(pathway,answers);
  const label=(q,v)=>q?.options?.find(([,x])=>x===v)?.[0]||v||'Not answered';
  const answer=id=>{const q=qs.find(x=>x.id===id);return label(q,answers[id])+(isOtherValue(answers[id])&&answers[otherKey(id)]?': '+answers[otherKey(id)]:'');};
  let stage='',amount='';try{stage=sessionStorage.getItem('healthtech-production-stage')||'';amount=sessionStorage.getItem('healthtech-financing-amount')||'';}catch{}
