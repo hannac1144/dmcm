@@ -162,7 +162,7 @@ function downloadPDF({pathway,answers}){
  :[['Product and intended use','For '+product+', document functions, intended users, claims, patient impact, inputs/outputs, and data flows. Assess FDA status function-by-function; “software” or “device” alone does not settle classification.'],['Stage gate','At '+chosenStage+', define the next prototype, validation, clinical, or regulatory deliverable, acceptance criteria, accountable lead, budget, and decision date.'],['Ownership and authority','For '+org+', confirm ownership of code, inventions, datasets, and improvements; review founder/employee assignments, institution/vendor rights, grants, and required approvals.'],['Funding and partner gap','Your stated need is '+need+'. Tie the amount or partner work package to a defined milestone, deliverables, timing, and rights retained.'],['Deal guardrail','Your priority is '+priority+'. Translate it into specific limits on control, exclusivity, economics, IP/data rights, milestones, and termination/reversion.']];
  table([['Decision','What to resolve'],...focus],[150,378]);
  sub('How your specific selections change the work');
- const structure=answer('legalStructure'),selectedState=answers.state||'';
+ const structure=answer('legalStructure');
  const tailored=[];
  if(pathway==='drug'){
   tailored.push(['Selected therapeutic','For '+product+', make the development plan identify product-specific potency, safety, dose, formulation, and CMC questions. For a biologic or cell/gene therapy, include characterization, comparability, chain-of-identity/custody where relevant, and specialized manufacturing controls; for a small molecule, include formulation, impurity, stability, and process-control questions.']);
