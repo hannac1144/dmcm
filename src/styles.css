@@ -217,3 +217,40 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 .complete .summary-flow-step p { line-height:1.6; }
 .complete .summary-flow-step p strong { display:inline-block; margin-top:10px; }
 @media(max-width:760px){ .complete .summary-flow,.complete .summary-priorities { grid-template-columns:1fr; }.complete .summary-priorities { grid-column:auto; } }
+
+
+/* Concise recommendation comparison chart and expandable decision analysis */
+.recommendation-summary { text-align:left; }
+.recommendation-chart-wrap { width:100%; overflow-x:auto; margin:18px 0 26px; border:1px solid #dce4df; border-radius:12px; background:#fff; }
+.recommendation-chart { width:100%; border-collapse:collapse; min-width:760px; table-layout:fixed; }
+.recommendation-chart th,.recommendation-chart td { padding:13px 14px; text-align:left; vertical-align:top; border-bottom:1px solid #e7ece8; color:#59665e; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
+.recommendation-chart thead th { background:#f2f6f3; color:#46574d; font-size:10px; font-weight:750; letter-spacing:.055em; text-transform:uppercase; }
+.recommendation-chart tbody th { width:15%; color:#34483b; font-size:12px; font-weight:750; background:#fafcfb; }
+.recommendation-chart td strong { color:#24382d; font-size:13px; }
+.recommendation-chart tbody tr:last-child th,.recommendation-chart tbody tr:last-child td { border-bottom:0; }
+.recommendation-details { margin-top:8px; }
+.recommendation-details > h3 { margin:0 0 12px; color:#2c4034; font-size:16px; }
+.recommendation-detail { margin:10px 0; border:1px solid #dce4df; border-radius:10px; background:#fff; overflow:hidden; }
+.recommendation-detail summary { display:grid; grid-template-columns:minmax(120px, .7fr) minmax(180px, 1.4fr) auto; gap:12px; align-items:center; padding:15px 17px; cursor:pointer; list-style:none; }
+.recommendation-detail summary::-webkit-details-marker { display:none; }
+.recommendation-detail summary:after { content:'＋'; color:#547264; font-size:18px; font-weight:500; }
+.recommendation-detail[open] summary:after { content:'−'; }
+.recommendation-detail summary span { color:#718078; font-size:10px; font-weight:750; letter-spacing:.06em; text-transform:uppercase; }
+.recommendation-detail summary strong { color:#2c4034; font-size:13px; line-height:1.4; }
+.recommendation-detail summary em { color:#607568; font-size:11px; font-style:normal; white-space:nowrap; }
+.recommendation-detail-body { padding:0 18px 18px; border-top:1px solid #edf0ee; }
+.recommendation-detail-body h4 { color:#526058; font-size:11px; text-transform:uppercase; letter-spacing:.055em; margin:16px 0 7px; }
+.recommendation-detail-body p,.recommendation-detail-body li { color:#59655e; font-size:12px; line-height:1.6; }
+.recommendation-detail-body p { margin:0; }
+.recommendation-detail-body ul,.recommendation-detail-body ol { margin:0; padding-left:19px; }
+.recommendation-detail-body li+li { margin-top:5px; }
+.recommendation-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+@media(max-width:760px) {
+ .recommendation-detail summary { grid-template-columns:1fr auto; gap:5px 10px; }
+ .recommendation-detail summary span { grid-column:1; }
+ .recommendation-detail summary strong { grid-column:1; }
+ .recommendation-detail summary em { display:none; }
+ .recommendation-detail summary:after { grid-column:2; grid-row:1 / span 2; }
+ .recommendation-detail-grid { grid-template-columns:1fr; gap:4px; }
+ .recommendation-detail-body { padding:0 14px 15px; }
+}
