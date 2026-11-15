@@ -221,12 +221,12 @@ footer { display:flex; justify-content:space-between; padding:24px 6vw; color:#8
 
 /* Concise recommendation comparison chart and expandable decision analysis */
 .recommendation-summary { text-align:left; }
-.recommendation-chart-wrap { width:100%; overflow-x:auto; margin:18px 0 26px; border:1px solid #dce4df; border-radius:12px; background:#fff; }
-.recommendation-chart { width:100%; border-collapse:collapse; min-width:760px; table-layout:fixed; }
-.recommendation-chart th,.recommendation-chart td { padding:13px 14px; text-align:left; vertical-align:top; border-bottom:1px solid #e7ece8; color:#59665e; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
-.recommendation-chart thead th { background:#f2f6f3; color:#46574d; font-size:10px; font-weight:750; letter-spacing:.055em; text-transform:uppercase; }
+.recommendation-chart-wrap { width:100%; max-width:100%; overflow:visible; margin:16px 0 22px; border:1px solid #dce4df; border-radius:12px; background:#fff; }
+.recommendation-chart { width:100%; border-collapse:collapse; table-layout:fixed; }
+.recommendation-chart th,.recommendation-chart td { padding:10px 12px; text-align:left; vertical-align:top; border-bottom:1px solid #e7ece8; color:#59665e; font-size:12px; line-height:1.45; overflow-wrap:anywhere; }
+.recommendation-chart thead th { background:#f2f6f3; color:#46574d; font-size:10px; font-weight:750; letter-spacing:.045em; text-transform:uppercase; }\n.recommendation-chart thead th:nth-child(1) { width:19%; }\n.recommendation-chart thead th:nth-child(2) { width:32%; }\n.recommendation-chart thead th:nth-child(3) { width:49%; }
 .recommendation-chart tbody th { width:15%; color:#34483b; font-size:12px; font-weight:750; background:#fafcfb; }
-.recommendation-chart td strong { color:#24382d; font-size:13px; }
+.recommendation-chart td strong { color:#24382d; font-size:12px; }
 .recommendation-chart tbody tr:last-child th,.recommendation-chart tbody tr:last-child td { border-bottom:0; }
 .recommendation-details { margin-top:8px; }
 .recommendation-details > h3 { margin:0 0 12px; color:#2c4034; font-size:16px; }
